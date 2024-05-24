@@ -1,37 +1,52 @@
 <template>
     <div class="basket">
-      <div class="items">
+      <template v-if="this.cart.length == 0">
+        <h4>Your cart is empty</h4>
+      </template>
+
+      <div v-else class="items">
   
-        <div class="item">
-          <div class="remove">Remove item</div>
-          <div class="photo"><img src="https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg" alt=""></div>
-          <div class="description">Mens Casual Premium Slim Fit T-Shirts </div>
+        <div class="item" v-for="(item, index) in cart" :key="index">
+          <div class="remove" @click="this.$store.dispatch('removeFromCart', item.id);">Remove item</div>
+          <div class="photo"><img :src="item.image" alt=""></div>
+          <div class="description">{{ item.title }}</div>
           <div class="price">
             <span class="quantity-area">
-              <button disabled="">-</button>
-              <span class="quantity">1</span>
-              <button>+</button>
+              <button :disabled="item.quantity == 1" @click="item.quantity--">-</button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button @click="item.quantity++">+</button>
             </span>
-            <span class="amount">US$ 22.30</span>
+            <span class="amount">US$ {{ (item.price*item.quantity).toFixed(2) }}</span>
           </div>
         </div>
-        <div class="grand-total"> Grand Total: US$ 22.30</div>
+        <div class="grand-total"> Grand Total: US$ {{ grandTotal() }}</div>
   
       </div>
     </div>
   </template>
   
-  <script>
+<script>
+  import { mapState } from 'vuex';
   
   export default {
     name: 'ShoppingBasket',
   
     methods: {
-     
+     grandTotal() {
+      var total = 0;
+      this.cart.forEach(item => {
+        total += item.price*item.quantity;
+      });
+      return total.toFixed(2);
+     }
     },
+
+    computed: mapState([
+      'cart'
+    ]),
    
   }
-  </script>
+</script>
   
   <style lang="scss">
   
