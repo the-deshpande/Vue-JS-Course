@@ -1,5 +1,7 @@
 <script setup>
-const props = defineProps(['filterBy']);
+import { useTasksStore } from '../stores/tasksStore';
+const store = useTasksStore();
+
 </script>
 
 <template>
@@ -8,20 +10,20 @@ const props = defineProps(['filterBy']);
         <p>Filter by state</p>
         <div class="badges">
           <div 
-            @click="$emit('setFilter', 'todo')"
+            @click="store.setFilter('todo')"
             class="badge" 
-            :class="{selected: filterBy == 'todo'}"
+            :class="{selected: store.filterBy == 'todo'}"
           >
             To-Do
           </div>
           <div 
-            @click="$emit('setFilter', 'done')"
+            @click="store.setFilter('done')"
             class="badge" 
-            :class="{selected: filterBy == 'done'}"
+            :class="{selected: store.filterBy == 'done'}"
           >
             Done
           </div>
-          <span class="clear" v-if="filterBy != ''" @click="$emit('setFilter', '')">
+          <span class="clear" v-if="store.filterBy != ''" @click="store.setFilter('')">
             x clear
           </span>
         </div>
